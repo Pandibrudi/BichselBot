@@ -1,4 +1,4 @@
-# I used this tutorial: https://www.youtube.com/watch?v=UuNGmhLpbCI by 
+# I used this tutorial: https://www.youtube.com/watch?v=UuNGmhLpbCI 
 import os
 import pickle
 import numpy as np
@@ -10,7 +10,7 @@ from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score
 
 #prepare data
-input_dir = 'C:/Users/Fabia/Documents/Arbeit/Coding/Bichsel Bot/Image Recognition Beispiel/data'
+input_dir = 'C:/Users/Fabia/Documents/Arbeit/Coding/Bichsel Bot/Image Recognition Beispiel/data' #path to folder containing the data in different folders
 categories = ['chairs', 'tables']
 
 data = []
