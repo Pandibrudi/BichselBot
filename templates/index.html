@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bichsel Bot</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+    <!--UX Stuff-->
+    <div class="container">
+        <div class="row">
+            <div class="col text-center">
+                <h1>Der Bichsel Bot</h1>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col text-center">
+                <h2>1. Schritt: lade ein Bild hoch</h2>
+                <!-- Upload -->
+                <form action="/upload" method="post" enctype="multipart/form-data">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" name="file">
+                        <label class="custom-file-label" for="customFile">Choose file</label>
+                        <input type="submit" class="btn btn-primary" value="Bild hochladen">
+                    </div>
+                    
+                    <br>
+                    <br>
+                    <!-- Resultat des Uploads -->
+                    {% if message %}
+                        {% if message == "Keine Datei ausgewählt" %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ message }}
+                            </div>
+                        {% elif message == "Bild erfolgreich hochgeladen" %}
+                            <div class="alert alert-success" role="alert">
+                                {{ message }}
+                            </div>
+                        {% else %}
+                            {{ message }}
+                        {% endif %}
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col text-center">
+                    <!-- Anzeige Bild -->
+                    {% if filename %}
+                    <img src="{{ url_for('uploaded_file', filename=filename) }}" alt="Hochgeladenes Bild" style="max-width: 25%;">
+                    {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col text-center">
+                <h2>Schritt 2: Klicke auf den Button </h2>
+                <button id="askBtn" class="btn btn-primary">Benenne diesen Gegenstand</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col text-center">
+                <div class="alert alert-info" role="alert">
+                    <h4 class="alert-heading">Peter Bichsel sagt:</h4>
+                    <hr>
+                    <div id="result"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Display file name in upload form
+        $(".custom-file-input").on("change", function() {
+          var fileName = $(this).val().split("\\").pop();
+          $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+    </script>
+
+    <script>
+        $(document).ready(function(){
+            $('#askBtn').click(function(){
+                $.ajax({
+                    url: '/ask', // Pfad zur Flask-Routenfunktion
+                    type: 'GET',
+                    success: function(response){
+                        $('#result').text(response); // Anzeige des Ergebnisses in der 'result'-Div
+                    }
+                });
+            });
+        });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>
