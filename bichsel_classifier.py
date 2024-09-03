@@ -6,7 +6,7 @@ from skimage.transform import resize
 
 def ask_bichsel():
     # Laden des Modells
-    loaded_model = pickle.load(open('./model.p', 'rb'))
+    loaded_model = pickle.load(open('./model2.p', 'rb'))
 
     # Funktion zum Laden und Vorbereiten eines Bildes
     def preprocess_image(image_path):
@@ -26,11 +26,12 @@ def ask_bichsel():
         img = preprocess_image(image_path)
         # Vorhersage des geladenen Modells
         prediction = loaded_model.predict([img])
-        # Konfidenz des geladenen Modells
-        confidence = loaded_model.decision_function([img])
+        # Wahrscheinlichkeiten des geladenen Modells
+        proba = loaded_model.predict_proba([img])
+        confidence = np.max(proba) * 100  # Convert to percentage
         # Ausgabe der Vorhersage und Konfidenz
         if prediction[0] == 0:
-            return "Bei {} handelt es sich mit einer Konfidenz von {:.2f}% um einen Stuhl.".format(image_name, np.max(confidence)*100)
+            return "Bei {} handelt es sich mit einer Konfidenz von {:.2f}% um einen Stuhl.".format(image_name, confidence)
 
         elif prediction[0] == 1:
-            return "Bei {} handelt es sich mit einer Konfidenz von {:.2f}% um einen Tisch.".format(image_name, np.max(confidence)*100)
+            return "Bei {} handelt es sich mit einer Konfidenz von {:.2f}% um einen Tisch.".format(image_name, confidence)

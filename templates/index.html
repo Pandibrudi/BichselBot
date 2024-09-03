@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bichsel Bot</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/index.css') }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
@@ -18,17 +19,14 @@
         <br>
         <div class="row">
             <div class="col text-center">
-                <h2>1. Schritt: lade ein Bild hoch</h2>
+                <h3>1. Schritt: lade ein Bild hoch</h3>
                 <!-- Upload -->
                 <form action="/upload" method="post" enctype="multipart/form-data">
-                    <div class="custom-file">
+                    <div class="custom-file row">
                         <input type="file" class="custom-file-input" name="file">
                         <label class="custom-file-label" for="customFile">Choose file</label>
                         <input type="submit" class="btn btn-primary" value="Bild hochladen">
                     </div>
-                    
-                    <br>
-                    <br>
                     <!-- Resultat des Uploads -->
                     {% if message %}
                         {% if message == "Keine Datei ausgewählt" %}
@@ -45,22 +43,18 @@
                     {% endif %}
                 </form>
             </div>
-        </div>
-        <br>
-        <div class="row">
             <div class="col text-center">
-                    <!-- Anzeige Bild -->
-                    {% if filename %}
-                    <img src="{{ url_for('uploaded_file', filename=filename) }}" alt="Hochgeladenes Bild" style="max-width: 25%;">
-                    {% endif %}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col text-center">
-                <h2>Schritt 2: Klicke auf den Button </h2>
+                <h3>Schritt 2: Klicke auf den Button </h3>
                 <button id="askBtn" class="btn btn-primary">Benenne diesen Gegenstand</button>
             </div>
+            <div class="col text-center">
+                <!-- Anzeige Bild -->
+                {% if filename %}
+                <img src="{{ url_for('uploaded_file', filename=filename) }}" alt="Hochgeladenes Bild" style="max-width: 50%;">
+                {% endif %}
+            </div>
         </div>
+        <br>
         <div class="row">
             <div class="col text-center">
                 <div class="alert alert-info" role="alert">

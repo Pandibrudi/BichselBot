@@ -1,0 +1,13 @@
+html{
+    max-height: 100%;
+}
+
+.btn.btn-primary{
+
+    margin: 10px;
+}
+
+.alert{
+
+    top: 20px;
+}
