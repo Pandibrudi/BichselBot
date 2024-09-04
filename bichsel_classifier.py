@@ -11,7 +11,7 @@ def ask_bichsel():
     # Funktion zum Laden und Vorbereiten eines Bildes
     def preprocess_image(image_path):
         img = imread(image_path)
-        img = resize(img, (15, 15))
+        img = resize(img, (32, 32))
         img = img.flatten()
         return img
 

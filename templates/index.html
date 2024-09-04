@@ -10,7 +10,7 @@
 </head>
 <body>
     <!--UX Stuff-->
-    <div class="container">
+    <div class="container mt-5">
         <div class="row">
             <div class="col text-center">
                 <h1>Der Bichsel Bot</h1>
@@ -25,16 +25,16 @@
                     <div class="custom-file row">
                         <input type="file" class="custom-file-input" name="file">
                         <label class="custom-file-label" for="customFile">Choose file</label>
-                        <input type="submit" class="btn btn-primary" value="Bild hochladen">
+                        <input type="submit" class="btn btn-primary mt-3" value="Bild hochladen">
                     </div>
                     <!-- Resultat des Uploads -->
                     {% if message %}
                         {% if message == "Keine Datei ausgewählt" %}
-                            <div class="alert alert-danger" role="alert">
+                            <div class="alert alert-danger mt-2" role="alert">
                                 {{ message }}
                             </div>
                         {% elif message == "Bild erfolgreich hochgeladen" %}
-                            <div class="alert alert-success" role="alert">
+                            <div class="alert alert-success mt-2" role="alert">
                                 {{ message }}
                             </div>
                         {% else %}
@@ -55,7 +55,7 @@
             </div>
         </div>
         <br>
-        <div class="row">
+        <div class="row mt-5">
             <div class="col text-center">
                 <div class="alert alert-info" role="alert">
                     <h4 class="alert-heading">Peter Bichsel sagt:</h4>

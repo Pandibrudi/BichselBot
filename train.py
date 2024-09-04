@@ -22,9 +22,9 @@ for category_idx, category in enumerate(categories):
 
         # Convert image to grayscale or keep it in RGB
         if len(img.shape) == 3:  # If the image is RGB
-            img = resize(img, (15, 15, 3))  # Resize to 15x15 with 3 color channels
+            img = resize(img, (32, 32, 3))  # Resize to 15x15 with 3 color channels
         else:  # If the image is grayscale
-            img = resize(img, (15, 15))  # Resize to 15x15 with 1 channel
+            img = resize(img, (32, 32))  # Resize to 15x15 with 1 channel
 
         data.append(img.flatten())
         labels.append(category_idx)
