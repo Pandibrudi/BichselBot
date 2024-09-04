@@ -1,58 +1,73 @@
-import os
-import pickle
-import numpy as np
-from skimage.io import imread
-from skimage.transform import resize
-from sklearn.model_selection import train_test_split
-from sklearn.model_selection import GridSearchCV
-from sklearn.svm import SVC
-from sklearn.metrics import accuracy_score
+# Importing all necessary libraries
+from keras.preprocessing.image import ImageDataGenerator
+from keras.models import Sequential
+from keras.layers import Conv2D, MaxPooling2D
+from keras.layers import Activation, Dropout, Flatten, Dense
+from keras import backend as K
 
-# Prepare data
-input_dir = 'C:/Users/Fabia/Documents/Coding/BichselBot/data/'  # Path to folder containing the data in different folders
-categories = ['chairs', 'tables']
+img_width, img_height = 180, 180
 
-data = []
-labels = []
+train_data_dir = 'C:/Users/Fabia/Documents/Coding/BichselBot/data/train'
+validation_data_dir = 'C:/Users/Fabia/Documents/Coding/BichselBot/data/test'
+nb_train_samples =400
+nb_validation_samples = 100
+epochs = 10
+batch_size = 16
 
-for category_idx, category in enumerate(categories):
-    for file in os.listdir(os.path.join(input_dir, category)):
-        img_path = os.path.join(input_dir, category, file)
-        img = imread(img_path)
+if K.image_data_format() == 'channels_first':
+	input_shape = (3, img_width, img_height)
+else:
+	input_shape = (img_width, img_height, 3)
 
-        # Convert image to grayscale or keep it in RGB
-        if len(img.shape) == 3:  # If the image is RGB
-            img = resize(img, (32, 32, 3))  # Resize to 15x15 with 3 color channels
-        else:  # If the image is grayscale
-            img = resize(img, (32, 32))  # Resize to 15x15 with 1 channel
+model = Sequential()
+model.add(Conv2D(32, (2, 2), input_shape=input_shape))
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
 
-        data.append(img.flatten())
-        labels.append(category_idx)
+model.add(Conv2D(32, (2, 2)))
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
 
-# Convert lists to numpy arrays
-data = np.array(data, dtype=np.float32)
-labels = np.array(labels)
+model.add(Conv2D(64, (2, 2)))
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
 
-# Train / test split
-x_train, x_test, y_train, y_test = train_test_split(data, labels, test_size=0.2, shuffle=True, stratify=labels)
+model.add(Flatten())
+model.add(Dense(64))
+model.add(Activation('relu'))
+model.add(Dropout(0.5))
+model.add(Dense(1))
+model.add(Activation('sigmoid'))
 
-# Train classifier
-classifier = SVC(probability=True)
+model.compile(loss='binary_crossentropy',
+			optimizer='rmsprop',
+			metrics=['accuracy'])
 
-parameters = [{'gamma': [0.01, 0.001, 0.0001], 'C': [1, 10, 100, 1000]}]
+train_datagen = ImageDataGenerator(
+	rescale=1. / 255,
+	shear_range=0.2,
+	zoom_range=0.2,
+	horizontal_flip=True)
 
-grid_search = GridSearchCV(classifier, parameters)
+test_datagen = ImageDataGenerator(rescale=1. / 255)
 
-grid_search.fit(x_train, y_train)
+train_generator = train_datagen.flow_from_directory(
+	train_data_dir,
+	target_size=(img_width, img_height),
+	batch_size=batch_size,
+	class_mode='binary')
 
-# Test performance
-best_estimator = grid_search.best_estimator_
+validation_generator = test_datagen.flow_from_directory(
+	validation_data_dir,
+	target_size=(img_width, img_height),
+	batch_size=batch_size,
+	class_mode='binary')
 
-y_prediction = best_estimator.predict(x_test)
+model.fit_generator(
+	train_generator,
+	steps_per_epoch=nb_train_samples // batch_size,
+	epochs=epochs,
+	validation_data=validation_generator,
+	validation_steps=nb_validation_samples // batch_size)
 
-score = accuracy_score(y_prediction, y_test)
-
-print('{}% of samples were, according to Peter Bichsel, correctly classified.'.format(str(score * 100)))
-
-# Save the model
-pickle.dump(best_estimator, open('./model2.p', 'wb'))
+model.save_weights('model_saved.h5')
