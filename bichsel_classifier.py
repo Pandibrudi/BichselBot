@@ -76,11 +76,6 @@ def ask_bichsel():
         prediction = model.predict(img)
         # Ergebnis interpretieren
         if prediction[0] > 0.5:
-            return 'Das ist ein Tisch.'
+            return f"Zu '{image_name}' sage ich 'Tisch'."
         else:
-            return 'Das ist ein Stuhl.'
-
-# Beispielaufruf
-
-result = ask_bichsel()
-print(result)
+            return f"Zu '{image_name}' sage ich 'Stuhl'."
